@@ -28,11 +28,22 @@ public class AMController {
         articles.put(lastId, new Article(lastId, title, content, regDate, updateDate));
     }
 
+    public void addTestArticle(int howMany) {
+        for (int i = 0; i < howMany; i++) {
+            lastId++;
+            String testTitle = "TestTitle" + lastId;
+            String testContent = "TestContent" + lastId;
+            String regDate = Util.getNow();
+            String updateDate = regDate;
+            articles.put(lastId, new Article(lastId, testTitle, testContent, regDate, updateDate));
+        }
+    }
+
     public void list() {
         if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
         else {
             System.out.println("========== 게시글 목록 =========");
-            System.out.println(" 번호  /    날짜    /    제목    /    내용   ");
+            System.out.println(" 번호  /      날짜      /    제목    /    내용   ");
 
             for (int i = lastId; i > 0; i--) {
                 if (articles.containsKey(i)) {
@@ -52,26 +63,32 @@ public class AMController {
     }
 
     public void detail(int idxOfSelectedArticle) {
-        if (articles.containsKey(idxOfSelectedArticle)) {
-            System.out.println("===== 게시글 상세보기 =====");
-            Article article = articles.get(idxOfSelectedArticle);
-            System.out.println("번호 : " + article.getId());
-            System.out.println("작성 날짜 : " + article.getRegDateTime());
-            System.out.println("마지막 수정 날짜 : " + article.getUpdateDateTime());
-            System.out.println("제목 : " + article.getTitle());
-            System.out.println("내용 : " + article.getContent());
-        } else {
-            System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
+        if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
+        else {
+            if (articles.containsKey(idxOfSelectedArticle)) {
+                System.out.println("===== 게시글 상세보기 =====");
+                Article article = articles.get(idxOfSelectedArticle);
+                System.out.println("번호 : " + article.getId());
+                System.out.println("작성 날짜 : " + article.getRegDateTime());
+                System.out.println("마지막 수정 날짜 : " + article.getUpdateDateTime());
+                System.out.println("제목 : " + article.getTitle());
+                System.out.println("내용 : " + article.getContent());
+            } else {
+                System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
+            }
         }
     }
 
     public void delete(int idxOfSelectedArticle) {
-        if (articles.containsKey(idxOfSelectedArticle)) {
-            articles.remove(idxOfSelectedArticle);
-            System.out.println(idxOfSelectedArticle + "번 게시글이 삭제되었습니다.");
-            articleCount--;
-        } else {
-            System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
+        if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
+        else {
+            if (articles.containsKey(idxOfSelectedArticle)) {
+                articles.remove(idxOfSelectedArticle);
+                System.out.println(idxOfSelectedArticle + "번 게시글이 삭제되었습니다.");
+                articleCount--;
+            } else {
+                System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
+            }
         }
     }
 

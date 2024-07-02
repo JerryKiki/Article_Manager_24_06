@@ -1,5 +1,7 @@
 package org.koreait;
 
+import org.koreait.Article.controller.AMController;
+
 public class Main {
     public static void main(String[] args) {
         Container.init();

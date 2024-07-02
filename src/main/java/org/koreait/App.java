@@ -6,13 +6,15 @@ import org.koreait.system.controller.SystemController;
 public class App {
 
     byte system_status = 1;
+    SystemController systemController = new SystemController();
+    AMController amController = new AMController();
+
 
     public void run() {
 
         System.out.println("== Article Manager Execution ==");
 
-        SystemController systemController = new SystemController();
-        AMController amController = new AMController();
+        makeTestData();
 
         while (system_status == 1) {
             System.out.print("명령어) ");
@@ -55,5 +57,9 @@ public class App {
                     break;
             }
         }
+    }
+
+    private void makeTestData() {
+        amController.addTestArticle(3);
     }
 }

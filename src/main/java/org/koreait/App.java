@@ -32,24 +32,27 @@ public class App {
                 continue;
             }
 
+
+
             switch (rq.getActionMethod()) {
                 case "exit" :
                     systemController.exit();
                     system_status = 0;
                     break;
-                case "article write" :
+                case "write" :
                     amController.write();
                     break;
-                case "article list" :
-                    amController.list();
+                case "list" :
+                    if (String.valueOf(rq.getListIdxChar()).isEmpty()) amController.list();
+                    else amController.list(String.valueOf(rq.getListIdxChar()));
                     break;
-                case "article detail" :
+                case "detail" :
                     amController.detail(rq.getIdxOfSelectedArticle());
                     break;
-                case "article delete" :
+                case "delete" :
                     amController.delete(rq.getIdxOfSelectedArticle());
                     break;
-                case "article modify" :
+                case "modify" :
                     amController.modify(rq.getIdxOfSelectedArticle());
                     break;
                 default :

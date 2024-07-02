@@ -29,10 +29,11 @@ public class AMController {
     }
 
     public void addTestArticle(int howMany) {
+        System.out.println("== 테스트 데이터 생성 ==");
         for (int i = 0; i < howMany; i++) {
             lastId++;
-            String testTitle = "TestTitle" + lastId;
-            String testContent = "TestContent" + lastId;
+            String testTitle = "TT" + lastId;
+            String testContent = "TC" + lastId;
             String regDate = Util.getNow();
             String updateDate = regDate;
             articles.put(lastId, new Article(lastId, testTitle, testContent, regDate, updateDate));
@@ -42,23 +43,47 @@ public class AMController {
     public void list() {
         if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
         else {
-            System.out.println("========== 게시글 목록 =========");
+            System.out.println("================== 게시글 목록 ==================");
             System.out.println(" 번호  /      날짜      /    제목    /    내용   ");
 
             for (int i = lastId; i > 0; i--) {
                 if (articles.containsKey(i)) {
                     Article article = articles.get(i);
-                    String displayTitle = subForList(article.getTitle(), "Title");
-                    String displayContent = subForList(article.getContent(), "Content");
-                    String thisArticleRegDate = article.getRegDateTime();
-                    String[] DateAndTime = thisArticleRegDate.split(" ");
-                    if (Util.getNow().split(" ")[0].equals(DateAndTime[0])) {
-                        System.out.printf("   %d   /    %s    /   %s   /   %s   \n", article.getId(), DateAndTime[1], displayTitle, displayContent);
-                    } else {
-                        System.out.printf("   %d   /    %s    /   %s   /   %s   \n", article.getId(), DateAndTime[0], displayTitle, displayContent);
+                    displayArticleList(article);
+                }
+            }
+        }
+    }
+
+    public void list(String listIdxChar) {
+        if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
+        else {
+            System.out.printf("========= 제목에 %s가 포함된 게시글 목록 =========\n", listIdxChar);
+            System.out.println(" 번호  /      날짜      /    제목    /    내용   ");
+            int articleWithChar = 0;
+            for (int i = lastId; i > 0; i--) {
+                if (articles.containsKey(i)) {
+                    Article article = articles.get(i);
+                    String thisArticleTitle = article.getTitle();
+                    if (thisArticleTitle.contains(listIdxChar)) {
+                        displayArticleList(article);
+                        articleWithChar++;
                     }
                 }
             }
+            if (articleWithChar == 0) System.out.printf("%s가 포함된 게시글이 없습니다.\n", listIdxChar);
+        }
+    }
+
+    public void displayArticleList(Article article) {
+        String displayTitle = subForList(article.getTitle(), "Title");
+        String displayContent = subForList(article.getContent(), "Content");
+        String thisArticleRegDate = article.getRegDateTime();
+        String[] DateAndTime = thisArticleRegDate.split(" ");
+        if (Util.getNow().split(" ")[0].equals(DateAndTime[0])) {
+            System.out.printf("   %d   /    %s    /   %s   /   %s   \n", article.getId(), DateAndTime[1], displayTitle, displayContent);
+        } else {
+            System.out.printf("   %d   /    %s    /   %s   /   %s   \n", article.getId(), DateAndTime[0], displayTitle, displayContent);
         }
     }
 

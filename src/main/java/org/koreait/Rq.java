@@ -3,24 +3,38 @@ package org.koreait;
 import java.util.InputMismatchException;
 
 public class Rq {
-    String actionMethod;
-    int idxOfSelectedArticle;
-    String errMessage = "";
+    private String actionMethod;
+    private int idxOfSelectedArticle;
+    private String listIdxChar = "";
+    private String errMessage = "";
 
     public Rq(String cmd) {
 
         String[] cmdBits = cmd.split(" ");
 
         if (cmdBits.length == 1) this.actionMethod = cmdBits[0];
-        else if (cmdBits.length == 2) this.actionMethod = cmdBits[0] + " " + cmdBits[1];
+        else if (cmdBits.length == 2) this.actionMethod = cmdBits[1];
         else if (cmdBits.length == 3) {
-            this.actionMethod = cmdBits[0] + " " + cmdBits[1];
-            try {
-                this.idxOfSelectedArticle = Integer.parseInt(cmdBits[2]);
-            } catch (NumberFormatException e) {
-                errMessage = "Article Id는 숫자여야 합니다.";
+            this.actionMethod = cmdBits[1];
+            if (this.actionMethod.equals("detail") || this.actionMethod.equals("delete") || this.actionMethod.equals("modify")) {
+                try {
+                    this.idxOfSelectedArticle = Integer.parseInt(cmdBits[2]);
+                } catch (NumberFormatException e) {
+                    errMessage = "Article Id는 숫자여야 합니다.";
+                }
+            } else if (this.actionMethod.equals("list")) {
+                    this.listIdxChar = cmdBits[2];
             }
+
         }
+    }
+
+    public String getListIdxChar() {
+        return listIdxChar;
+    }
+
+    public void setListIdxChar(String listIdxChar) {
+        this.listIdxChar = listIdxChar;
     }
 
     public String getActionMethod() {

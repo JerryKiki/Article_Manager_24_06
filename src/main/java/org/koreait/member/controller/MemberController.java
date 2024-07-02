@@ -61,6 +61,9 @@ public class MemberController {
         } else if (isMember.equals("no")) {
             join();
             logIn();
+        } else {
+            System.out.println("yes 혹은 no를 입력해주세요.");
+            logIn();
         }
         return true;
     }

@@ -3,6 +3,8 @@ package org.koreait.Article.controller;
 import org.koreait.Article.entity.Article;
 import org.koreait.Container;
 import org.koreait.Util;
+import org.koreait.member.controller.MemberController;
+import org.koreait.member.entity.Member;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,11 +13,19 @@ import java.util.Map;
 
 public class AMController {
 
-    Map<Integer, Article> articles = new HashMap<>();
-    int lastId = 0;
-    int articleCount = 0;
+    Map<Integer, Article> articles;
+    MemberController memberController;
+    int lastId;
+    int articleCount;
 
-    public void write() {
+    public AMController(MemberController memberController) {
+        this.memberController = memberController;
+        this.articles = new HashMap<>();
+        this.lastId = 0;
+        this.articleCount = 0;
+    }
+
+    public void write(Member thisMember) {
         lastId++;
         articleCount++;
         System.out.print("제목: ");
@@ -25,14 +35,15 @@ public class AMController {
         System.out.printf("%d번 글이 생성되었습니다.\n", lastId);
         String regDate = Util.getNow();
         String updateDate = regDate;
-        articles.put(lastId, new Article(lastId, title, content, regDate, updateDate));
+        articles.put(lastId, new Article(lastId, title, content, regDate, updateDate, thisMember));
     }
 
     public void addTestArticle(int howMany) {
         System.out.println("== 테스트 데이터 생성 ==");
+        Member testMember = memberController.getMembers().get(1);
         lastId++;
         articleCount++;
-        articles.put(lastId, new Article(lastId, "T1", "T1", "2023-12-12 12:12:12", "2023-12-12 12:12:12"));
+        articles.put(lastId, new Article(lastId, "TT1", "TT1", "2023-12-12 12:12:12", "2023-12-12 12:12:12", testMember));
         for (int i = 0; i < howMany; i++) {
             lastId++;
             articleCount++;
@@ -40,7 +51,7 @@ public class AMController {
             String testContent = "TC" + lastId;
             String regDate = Util.getNow();
             String updateDate = regDate;
-            articles.put(lastId, new Article(lastId, testTitle, testContent, regDate, updateDate));
+            articles.put(lastId, new Article(lastId, testTitle, testContent, regDate, updateDate, testMember));
         }
     }
 
@@ -98,6 +109,7 @@ public class AMController {
                 System.out.println("===== 게시글 상세보기 =====");
                 Article article = articles.get(idxOfSelectedArticle);
                 System.out.println("번호 : " + article.getId());
+                System.out.println("작성자 : " + article.getAuthor().getLoginId());
                 System.out.println("작성 날짜 : " + article.getRegDateTime());
                 System.out.println("마지막 수정 날짜 : " + article.getUpdateDateTime());
                 System.out.println("제목 : " + article.getTitle());
@@ -108,32 +120,40 @@ public class AMController {
         }
     }
 
-    public void delete(int idxOfSelectedArticle) {
+    public void delete(int idxOfSelectedArticle, Member thisMember) {
         if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
         else {
             if (articles.containsKey(idxOfSelectedArticle)) {
-                articles.remove(idxOfSelectedArticle);
-                System.out.println(idxOfSelectedArticle + "번 게시글이 삭제되었습니다.");
-                articleCount--;
+                Article thisArticle = articles.get(idxOfSelectedArticle);
+                if (thisArticle.getAuthor() == thisMember) {
+                    articles.remove(idxOfSelectedArticle);
+                    System.out.println(idxOfSelectedArticle + "번 게시글이 삭제되었습니다.");
+                    articleCount--;
+                } else System.out.println("자신의 게시글만 삭제할 수 있습니다.");
             } else {
                 System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
             }
         }
     }
 
-    public void modify(int idxOfSelectedArticle) {
+    public void modify(int idxOfSelectedArticle, Member thisMember) {
         if (articles.containsKey(idxOfSelectedArticle)) {
             Article oldArticle = articles.get(idxOfSelectedArticle);
-            System.out.println("기존 제목 : " + oldArticle.getTitle());
-            System.out.println("기존 내용 : " + oldArticle.getContent());
-            System.out.print("제목: ");
-            String title = Container.getSc().nextLine();
-            System.out.print("내용: ");
-            String content = Container.getSc().nextLine();
-            oldArticle.setTitle(title);
-            oldArticle.setContent(content);
-            oldArticle.setUpdateDateTime(Util.getNow());
-            System.out.println(idxOfSelectedArticle + "번 게시글이 수정되었습니다.");
+            if (oldArticle.getAuthor() == thisMember) {
+                System.out.println("기존 제목 : " + oldArticle.getTitle());
+                System.out.println("기존 내용 : " + oldArticle.getContent());
+                System.out.print("제목: ");
+                String title = Container.getSc().nextLine();
+                System.out.print("내용: ");
+                String content = Container.getSc().nextLine();
+                oldArticle.setTitle(title);
+                oldArticle.setContent(content);
+                oldArticle.setUpdateDateTime(Util.getNow());
+                System.out.println(idxOfSelectedArticle + "번 게시글이 수정되었습니다.");
+            } else {
+                System.out.println("자신의 게시글만 수정할 수 있습니다.");
+            }
+
         } else {
             System.out.println(idxOfSelectedArticle + "번 게시글은 없습니다.");
         }

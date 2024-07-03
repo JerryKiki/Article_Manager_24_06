@@ -1,19 +1,30 @@
 package org.koreait.Article.entity;
 
+import org.koreait.member.entity.Member;
+
 public class Article {
     private int id;
     private String title;
     private String content;
     private String regDateTime; //작성 날짜 및 시간
     private String updateDateTime;
+    private Member author;
 
-
-    public Article(int id, String title, String content, String regDateTime, String updateDateTime) {
+    public Article(int id, String title, String content, String regDateTime, String updateDateTime, Member author) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.regDateTime = regDateTime;
         this.updateDateTime = updateDateTime;
+        this.author = author;
+    }
+
+    public Member getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Member author) {
+        this.author = author;
     }
 
     public String getRegDateTime() {

@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 public class Rq {
     private String actionMethod;
     private int idxOfSelectedArticle;
-    private String listIdxChar = "";
+    private String listIdxKeyword = "";
     private String errMessage = "";
 
     public Rq(String cmd) {
@@ -23,18 +23,18 @@ public class Rq {
                     errMessage = "Article Id는 숫자여야 합니다.";
                 }
             } else if (this.actionMethod.equals("list")) {
-                    this.listIdxChar = cmdBits[2];
+                    this.listIdxKeyword = cmdBits[2];
             }
 
         }
     }
 
     public String getListIdxChar() {
-        return listIdxChar;
+        return listIdxKeyword;
     }
 
     public void setListIdxChar(String listIdxChar) {
-        this.listIdxChar = listIdxChar;
+        this.listIdxKeyword = listIdxChar;
     }
 
     public String getActionMethod() {

@@ -55,23 +55,23 @@ public class AMController {
         }
     }
 
-    public void list(String listIdxChar) {
+    public void list(String listIdxKeyword) {
         if(articles.isEmpty()) System.out.println("아직 아무런 글도 없습니다.");
         else {
-            System.out.printf("========= 제목에 %s가 포함된 게시글 목록 =========\n", listIdxChar);
+            System.out.printf("========= 제목에 %s가 포함된 게시글 목록 =========\n", listIdxKeyword);
             System.out.println(" 번호  /      날짜      /    제목    /    내용   ");
             int articleWithChar = 0;
             for (int i = lastId; i > 0; i--) {
                 if (articles.containsKey(i)) {
                     Article article = articles.get(i);
                     String thisArticleTitle = article.getTitle();
-                    if (thisArticleTitle.contains(listIdxChar)) {
+                    if (thisArticleTitle.contains(listIdxKeyword)) {
                         displayArticleList(article);
                         articleWithChar++;
                     }
                 }
             }
-            if (articleWithChar == 0) System.out.printf("%s가 포함된 게시글이 없습니다.\n", listIdxChar);
+            if (articleWithChar == 0) System.out.printf("%s가 포함된 게시글이 없습니다.\n", listIdxKeyword);
         }
     }
 

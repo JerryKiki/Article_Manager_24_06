@@ -30,8 +30,12 @@ public class AMController {
 
     public void addTestArticle(int howMany) {
         System.out.println("== 테스트 데이터 생성 ==");
+        lastId++;
+        articleCount++;
+        articles.put(lastId, new Article(lastId, "T1", "T1", "2023-12-12 12:12:12", "2023-12-12 12:12:12"));
         for (int i = 0; i < howMany; i++) {
             lastId++;
+            articleCount++;
             String testTitle = "TT" + lastId;
             String testContent = "TC" + lastId;
             String regDate = Util.getNow();

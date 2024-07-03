@@ -13,6 +13,18 @@ public class MemberController {
     private int lastMemberId = 0;
     private Map<Integer, Member> members = new HashMap<Integer, Member>();
 
+    public void addTestMember(int howMany) {
+        for (int i = 0; i < howMany; i++) {
+            lastMemberId++;
+            String testId = "test" + lastMemberId;
+            String testPW = "pw" + lastMemberId;
+            String testName = "name" + lastMemberId;
+            String regDate = Util.getNow();
+            Member testMember = new Member(lastMemberId, regDate, testId, testPW, testName);
+            members.put(lastMemberId, testMember);
+        }
+    }
+
     public void join() {
         lastMemberId++;
         System.out.println("===== 회원가입 =====");
@@ -35,37 +47,38 @@ public class MemberController {
         }
     }
 
-    public boolean logIn() {
-        System.out.print("회원이십니까? (yes/no) : ");
-        String isMember = Container.getSc().nextLine();
+    public Member logIn() {
 
-        if (isMember.equals("yes")) {
-            System.out.println("===== 로그인 =====");
-            System.out.print("your loginId : ");
-            String loginId = Container.getSc().nextLine();
-            System.out.print("your loginPW : ");
-            String loginPW = Container.getSc().nextLine();
-            Member nowMember = findMemberByLoginId(loginId);
-            if (nowMember != null) {
-                if (nowMember.getLoginPw().equals(loginPW)) {
-                    System.out.println("===== 로그인 성공 =====");
-                    return true;
+        boolean loginStatus = false;
+
+        while (!loginStatus) {
+            System.out.print("회원이십니까? (yes/no) : ");
+            String isMember = Container.getSc().nextLine();
+            if (isMember.equals("yes")) {
+                System.out.println("===== 로그인 =====");
+                System.out.print("your loginId : ");
+                String loginId = Container.getSc().nextLine();
+                System.out.print("your loginPW : ");
+                String loginPW = Container.getSc().nextLine();
+                Member nowMember = findMemberByLoginId(loginId);
+                if (nowMember != null) {
+                    if (nowMember.getLoginPw().equals(loginPW)) {
+                        System.out.println("===== 로그인 성공 =====");
+                        loginStatus = true;
+                        return nowMember;
+                    } else {
+                        System.out.println("비밀번호가 틀립니다. 다시 입력하십시오.");
+                    }
                 } else {
-                    System.out.println("비밀번호가 틀립니다. 다시 입력하십시오.");
-                    logIn();
+                    System.out.println("해당 아이디는 회원이 아닙니다. 다시 입력하십시오.");
                 }
+            } else if (isMember.equals("no")) {
+                join();
             } else {
-                System.out.println("해당 아이디는 회원이 아닙니다. 다시 입력하십시오.");
-                logIn();
+                System.out.println("yes 혹은 no를 입력해주세요.");
             }
-        } else if (isMember.equals("no")) {
-            join();
-            logIn();
-        } else {
-            System.out.println("yes 혹은 no를 입력해주세요.");
-            logIn();
         }
-        return true;
+        return null;
     }
 
     public Member findMemberByLoginId(String loginId) {
